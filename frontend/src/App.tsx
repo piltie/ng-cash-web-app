@@ -8,7 +8,7 @@ function App() {
   useEffect(() => {
     const fetchData = async () => {
       fetch("/api")
-        .then((response) => console.log(response))
+        .then((response) => response.json())
         .then((data) => setData(data.message));
     };
 

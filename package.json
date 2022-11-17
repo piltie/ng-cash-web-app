@@ -1,0 +1,10 @@
+
+{
+  "dependencies": {
+    "concurrently": "^7.0.0"
+  },
+  "scripts": {
+    "install": "concurrently \"cd ./backend && npm install\" \"cd ./frontend && npm install\"",
+    "start": "concurrently \"cd ./backend && npm run dev\" \"cd ./frontend && npm run dev\""
+  }
+}
