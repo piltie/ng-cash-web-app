@@ -2,25 +2,20 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 import express from "express";
+import cors from "cors";
 import config from "config";
+import db from "../config/db";
 
 const app = express();
 app.use(express.json());
 
-app.use(function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
-  );
-  next();
-});
+app.use(cors());
 
-app.get("/api", (req, res) => {
-  res.json({ message: "testando proxy" });
-});
+import router from "./router";
+app.use("/api/", router);
 
 const port = config.get<number>("port");
 app.listen(port, async () => {
-  console.log(`Listening on port ${port}.`);
+  await db();
+  console.log(`Server is running on port ${port}.`);
 });

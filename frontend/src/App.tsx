@@ -7,7 +7,7 @@ function App() {
   // testando proxy
   useEffect(() => {
     const fetchData = async () => {
-      fetch("/api")
+      fetch("/api/test")
         .then((response) => response.json())
         .then((data) => setData(data.message));
     };
