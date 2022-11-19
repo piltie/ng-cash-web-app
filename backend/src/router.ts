@@ -1,15 +1,14 @@
 import { Router } from "express";
-import {
-  createUserAccount,
-  findUserByUsername,getAccountById,
-} from "./controllers/usersController";
+import { createUser, loginUser, logoutUser, getUserBalance } from "./controllers/usersController";
 
 import { validate } from "./middleware/handleValidation";
-import { userCreateValidation } from "./middleware/userValidation";
+import { checkToken } from "./middleware/checkToken";
+import { userCreateValidation, userLoginValidation } from "./middleware/userValidation";
 
 const router = Router();
 
 export default router
-  .post("/user/create", userCreateValidation, validate, createUserAccount)
-  .get("/user/:username", findUserByUsername);
-  .get("/account/:id", getAccountById);
+  .post("/user/create", userCreateValidation(), validate, createUser)
+  .post("/user/login", userLoginValidation(), validate, loginUser)
+  .post("/user/logout", logoutUser)
+  .get("/user/balance", checkToken, getUserBalance);

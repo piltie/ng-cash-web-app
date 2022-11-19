@@ -5,7 +5,7 @@ function App() {
   const [data, setData] = useState(null);
 
   // testando proxy
-  useEffect(() => {
+/*  useEffect(() => {
     const fetchData = async () => {
       fetch("/api/test")
         .then((response) => response.json())
@@ -13,7 +13,7 @@ function App() {
     };
 
     fetchData();
-  }, []);
+  }, []);*/
 
   return (
     <div className="App">
