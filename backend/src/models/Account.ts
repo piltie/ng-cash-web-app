@@ -15,7 +15,7 @@ Account.init(
       primaryKey: true,
     },
     balance: {
-      type: new DataTypes.DECIMAL(),
+      type: new DataTypes.FLOAT,
       defaultValue: 100.0,
       allowNull: false,
     },

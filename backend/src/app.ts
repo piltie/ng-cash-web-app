@@ -11,8 +11,12 @@ app.use(express.json());
 
 app.use(cors());
 
-import router from "./router";
-app.use("/api/", router);
+// Routes
+import userRouter from "./routes/userRouter";
+import transactionRouter from "./routes/transactionRouter";
+
+app.use("/api/user/", userRouter);
+app.use("/api/transaction/", transactionRouter);
 
 const port = config.get<number>("port");
 app.listen(port, async () => {

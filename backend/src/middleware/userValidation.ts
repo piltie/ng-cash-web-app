@@ -4,21 +4,21 @@ export const userCreateValidation = () => {
   return [
     body("username")
       .isString()
-      .withMessage("O username é obrigatório.")
+      .withMessage("Username can't be empty.")
       .isLength({ min: 3 })
-      .withMessage("O username precisa ter no mínimo 3 caracteres"),
+      .withMessage("Username should be minimum 3 characters."),
     body("password")
       .isString()
-      .withMessage("A senha é obrigatória.")
+      .withMessage("Password can't be empty.")
       .isLength({ min: 8 })
-      .withMessage("A senha precisa ter no mínimo 8 caracteres")
+      .withMessage("Password should be minimum 8 characters.")
       .custom((password: string) => {
         if (!/\d/.test(password)) {
-          throw new Error("A senha precisa conter no mínimo um número");
+          throw new Error("Password should have at least 1 number.");
         }
         if (!/[A-Z]/.test(password)) {
           throw new Error(
-            "A senha precisa conter no mínimo uma letra maiúscula número"
+            "Password should have at least 1 uppercase letter."
           );
         }
         return true;
@@ -30,13 +30,9 @@ export const userLoginValidation = () => {
   return [
     body("username")
       .isString()
-      .withMessage("O username é obrigatório.")
-      .isLength({ min: 1 })
-      .withMessage("O username é obrigatório. 3"),
+      .withMessage("Username can't be empty."),
     body("password")
       .isString()
-      .withMessage("A senha é obrigatória.")
-      .isLength({ min: 1 })
-      .withMessage("A senha é obrigatória. 3"),
+      .withMessage("Password can't be empty."),
   ];
 };

@@ -1,42 +1,45 @@
 import { Request, Response } from "express";
-import bcrypt from "bcrypt";
 import { UniqueConstraintError } from "sequelize";
+import bcrypt from "bcrypt";
 import * as jwt from 'jsonwebtoken';
 
-// Models
-import Account from "../models/Account";
-import User from "../models/User";
+// Services
 import AccountServices from "../services/accountServices"
 import UserServices from "../services/userServices"
 
 // Dtos
-import { userAsDTO } from "../dtos/userDTO";
+import asDTO from "../dtos/userDTO";
+import Account from "../models/Account";
 
 
 export async function createUser(req: Request, res: Response) {
-  const account = await Account.create();
+  const accountServices = new AccountServices();
+  const userServices = new UserServices();
+  let account: Account | null = null;
 
   try {
     const data = req.body;
+    const username = data.username;
+    const password = data.password;
 
-    const user = await User.create({
-      username: data.username,
-      password: data.password,
-      accountId: account.id,
-    });
+    account = await accountServices.create();
+    const user = await userServices.create({ username, password, accountId: account.id });
 
-    return res.status(201).json(user);
+    return res.status(201).json({ username: user.username });
   } catch (e: any) {
-    account.destroy();
+    if (account instanceof Account) {
+      await accountServices.delete(account.id);
+    }
 
     if (e instanceof UniqueConstraintError) {
       return res.status(400).json({
-        msg: `Já existe uma conta com esse username.`,
+        message: `Username already exists.`,
+        e
       });
     }
 
     return res.status(500).json({
-      msg: `Ocorreu um erro e sua conta não foi criada. Por favor, contate nosso suporte e tente novamente.`,
+      message: `Unexpected error.`,
       e,
     });
   }
@@ -50,25 +53,29 @@ export async function loginUser(req: Request, res: Response) {
     const data = req.body;
     const user = await userServices.findByUsername(data.username);
 
-    if (!user) return res.status(400).json({ msg: "O usuário ou senha está incorreto." });
-
     bcrypt.compare(data.password, user.password, async function(err, result) {
-      if (!result) return res.status(400).json({ msg: "O usuário ou senha está incorreto." });
+      if (err) return res.status(401).json({ message: 'Invalid password.' });
 
       const account = await accountServices.findById(user.accountId);
-      if (!account) throw new Error;
 
-      const id = user.id;
+      const id = account.id;
       
       const token = jwt.sign({ id }, process.env.SECRET!, {
         expiresIn: "24h"
       });
+
+      const userDTO = asDTO(user, account);
       
-      return res.status(200).json({ user: userAsDTO(user, account), auth: true, token: token });
+      return res.status(200).json({ userDTO, token: token });
     })
   } catch (e: any) {
+
+    if (e instanceof ReferenceError) {
+      return res.status(404).json({ message: "Invalid username.", e });
+    }
+
     return res.status(500).json({
-      msg: `Ocorreu um erro. Por favor, contate nosso suporte e tente novamente.`,
+      message: `Unexpected error.`,
       e,
     });
   }
@@ -76,10 +83,10 @@ export async function loginUser(req: Request, res: Response) {
 
 export async function logoutUser(req: Request, res: Response) {
   try {
-    res.json({ auth: false, token: null });
+    res.status(200).json({ token: null });
   } catch (e: any) {
     return res.status(500).json({
-      msg: `Ocorreu um erro. Por favor, contate nosso suporte e tente novamente.`,
+      message: `Unexpected error.`,
       e,
     });
   }
@@ -87,20 +94,15 @@ export async function logoutUser(req: Request, res: Response) {
 
 export async function getUserBalance(req: Request, res: Response) {
   const accountServices = new AccountServices()
-  const userServices = new UserServices()
 
   try {
-    const id = req.body.id;
-    const user = await userServices.findById(id);
-    if (!user) throw new Error;
+    const id = req.body.accountId;
+    const account = await accountServices.findById(id);
 
-    const account = await accountServices.findById(user.accountId);
-    if (!account) throw new Error;
-
-    return res.status(200).json({  user: user.username, balance: account.balance });
+    return res.status(200).json({  account });
   } catch (e: any) {
     return res.status(500).json({
-      msg: `Ocorreu um erro. Por favor, contate nosso suporte e tente novamente.`,
+      message: `Unexpected error.`,
       e,
     });
   }

@@ -6,7 +6,7 @@ interface IUserDto {
     balance: number
 }
 
-export function userAsDTO(user: User, account: Account): IUserDto {
+export default function asDTO(user: User, account: Account): IUserDto {
     const userDto: IUserDto = {
         username: user.username,
         balance: account.balance

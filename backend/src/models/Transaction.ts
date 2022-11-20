@@ -7,6 +7,7 @@ class Transaction extends Model {
   declare debitedAccountId: string;
   declare creditedAccountId: string;
   declare value: number;
+  declare createdAt: string
 }
 
 Transaction.init(
@@ -32,7 +33,7 @@ Transaction.init(
       },
     },
     value: {
-      type: DataTypes.DECIMAL,
+      type: DataTypes.FLOAT,
       allowNull: false,
     },
   },
