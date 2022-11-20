@@ -1,10 +1,4 @@
-import { parse } from "path";
 import Account from "../models/Account";
-
-interface IAccountDetails {
-    id: string,
-    balance: number
-}
 
 export default class AccountServices {
     async create() {

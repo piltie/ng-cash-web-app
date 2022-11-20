@@ -1,30 +1,36 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import App from './App'
 
 import {
   createBrowserRouter,
-  RouterProvider,
-  Route,
+  RouterProvider, 
 } from "react-router-dom";
 
 import './index.css'
 
-import Root from "./routes/root";
+import VerificationLayout from "./routes/verificationRouter";
+import AuthLayout from "./pages/authLayout";
 import ErrorPage from "./error-page";
-import Contact from "./routes/contact";
+import Login from './components/login';
+import ExpiredSession from './components/expiredSession';
   
-
-
-const router = createBrowserRouter([
+const authRoute = createBrowserRouter([
   {
     path: "/",
-    element: <Root />,
+    element: <VerificationLayout />,
     errorElement: <ErrorPage />,
     children: [
       {
-        path: "contacts/:contactId",
-        element: <Contact />,
+        index: true,
+        element: <AuthLayout children={ <Login /> } />,
+      },
+      {
+        path: "login",
+        element: <AuthLayout children={ <Login /> } />,
+      },
+      {
+        path: "expiredSession",
+        element: <AuthLayout children={ <ExpiredSession /> } />,
       },
     ],
   },
@@ -32,6 +38,6 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <RouterProvider router={authRoute} />
   </React.StrictMode>
 )

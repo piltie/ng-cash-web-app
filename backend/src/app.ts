@@ -15,8 +15,8 @@ app.use(cors());
 import userRouter from "./routes/userRouter";
 import transactionRouter from "./routes/transactionRouter";
 
-app.use("/api/user/", userRouter);
-app.use("/api/transaction/", transactionRouter);
+app.use("/user/", userRouter);
+app.use("/transaction/", transactionRouter);
 
 const port = config.get<number>("port");
 app.listen(port, async () => {

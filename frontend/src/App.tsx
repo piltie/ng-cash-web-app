@@ -1,19 +1,20 @@
 import { useEffect, useState } from "react";
 import "./App.css";
+import api from "./services/api";
 
 function App() {
   const [data, setData] = useState(null);
 
   // testando proxy
-/*  useEffect(() => {
+  useEffect(() => {
     const fetchData = async () => {
-      fetch("/api/test")
-        .then((response) => response.json())
-        .then((data) => setData(data.message));
+      const response = await api.get("/test");
+
+      const data = response.data;
     };
 
     fetchData();
-  }, []);*/
+  }, []);
 
   return (
     <div className="App">
