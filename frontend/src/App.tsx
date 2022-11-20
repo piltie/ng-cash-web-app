@@ -9,7 +9,6 @@ function App() {
   useEffect(() => {
     const fetchData = async () => {
       const response = await api.get("/test");
-
       const data = response.data;
     };
 

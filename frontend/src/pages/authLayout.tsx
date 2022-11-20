@@ -9,13 +9,14 @@ interface IAuthLayoutProp {
 export default function AuthLayout({ children }: IAuthLayoutProp) {
   return (
     <div
-      className="flex h-[100vh] justify-center"
+      className="flex h-[100vh] items-center justify-center"
       style={{ backgroundImage: `url(${background})` }}
     >
-      <div className="mt-0 flex h-[100%] w-[100%] flex-col items-center md:mt-[4.5em] md:h-[30em] md:w-[30em]">
-        <img src={logo} className="w-[8em] md:w-[6em]"></img>
-        <div className="h-[100%] w-[100%] rounded-none bg-white p-[2em] md:rounded  ">
-          {" "}
+      <div className=" flex h-[100%] w-[100%] flex-col items-center md:h-[31em] md:w-[30em]">
+        <a href="https://ng.cash/">
+          <img src={logo} className="w-[8em] md:w-[6em]"></img>
+        </a>
+        <div className="flex h-[100%] w-[100%]  rounded-none bg-white px-[6em] py-[2em] md:rounded md:px-[2em] ">
           {children}
         </div>
       </div>

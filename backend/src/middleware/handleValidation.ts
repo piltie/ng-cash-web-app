@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { validationResult } from "express-validator";
 
+// Verifica o array de erros dos middlewares anteriores.
 export const validate = (req: Request, res: Response, next: NextFunction) => {
   const errors = validationResult(req);
 
