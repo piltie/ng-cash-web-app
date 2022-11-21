@@ -1,58 +1,48 @@
+import { redirect, useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "../services/auth";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import { UserIcon } from "@heroicons/react/24/solid";
 import { EyeIcon } from "@heroicons/react/24/solid";
 import { EyeSlashIcon } from "@heroicons/react/24/solid";
-import { redirect } from "react-router-dom";
-import api from "../services/api";
 import axios from "axios";
 import { useEffect } from "react";
 
-type FormData = {
+export type formData = {
   username: string;
   password: string;
 };
 
-export default function Login({
-  teset,
-  man,
-}: {
-  teset: React.Dispatch<React.SetStateAction<any>>;
-  man: any;
-}) {
+export default function LoginPage() {
   const {
     register,
     setError,
     formState: { errors },
     handleSubmit,
-  } = useForm<FormData>();
-  useEffect(() => {
-    console.log("i......H");
-    if (man.username != "") {
-      console.log(man);
-      console.log("foi??");
-      redirect("/transactions/aaaaaaaaaaaaaa");
-    }
-    //loader();
-  }, [man]);
-  const onSubmit = async (formData: FormData) => {
+  } = useForm<formData>();
+
+  let navigate = useNavigate();
+  let location = useLocation();
+  let auth = useAuth();
+
+  let from = location.state?.from?.pathname || "/";
+
+  const onSubmit = async (formData: formData) => {
     try {
-      const response = await api.post("/user/login", formData);
-      const data = response.data;
-      console.log("teste:", data);
-      teset({ username: data.userDTO.username, token: data.token });
+      await auth.signin(formData);
+
+      navigate(from, { replace: true });
     } catch (e) {
-      console.clear();
+      //console.clear();
       if (axios.isAxiosError(e)) {
-        if (e.response!.status == 400) {
+        if (e.response!.status === 400)
           return setError("username", { type: "custom" });
-        }
-        console.log("xxxxxxxxxxx");
-        if (e.response!.status == 401) {
+        if (e.response!.status === 401)
           return setError("password", { type: "custom" });
-        }
       }
-      throw new Error(`${e}`);
+
+      // TODO: MUDAR PRA PÁGINA DE ERRO
+      console.log("erro insesperoooooooooooooooo");
     }
   };
 

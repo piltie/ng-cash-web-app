@@ -95,14 +95,18 @@ export async function logoutUser(req: Request, res: Response) {
   }
 }
 
-export async function getUserBalance(req: Request, res: Response) {
+export async function getUserInfo(req: Request, res: Response) {
   const accountServices = new AccountServices();
+  const userServices = new UserServices();
 
   try {
     const id = req.body.accountId;
     const account = await accountServices.findById(id);
+    const user = await userServices.findByAccountId(id);
 
-    return res.status(200).json({ account });
+    const userDTO = asDTO(user, account);
+
+    return res.status(200).json({ userDTO, balance: account.balance });
   } catch (e: any) {
     return res.status(500).json({
       message: `Unexpected error.`,
