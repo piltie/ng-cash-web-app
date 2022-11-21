@@ -8,7 +8,6 @@ import {
   Navigate,
 } from "react-router-dom";
 import api from "../services/api";
-import { AuthStatus } from "../services/auth";
 
 type usee = {
   username: string;
@@ -41,7 +40,6 @@ export default function AppLayout() {
     } catch (e) {
       if (axios.isAxiosError(e)) {
         if (e.response!.status == 401) {
-          console.log("huuuuuuuuu");
           localStorage.removeItem("x-access-token");
           return navigate("/expiredToken");
         }
@@ -56,7 +54,6 @@ export default function AppLayout() {
 
   return (
     <>
-      <AuthStatus />
       INFORMAÇÕES DA SIDEBAR: <hr />
       <Outlet context={{ user }} />
     </>

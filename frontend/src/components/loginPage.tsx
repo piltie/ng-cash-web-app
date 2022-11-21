@@ -33,7 +33,7 @@ export default function LoginPage() {
 
       navigate(from, { replace: true });
     } catch (e) {
-      //console.clear();
+      console.clear();
       if (axios.isAxiosError(e)) {
         if (e.response!.status === 400)
           return setError("username", { type: "custom" });
@@ -41,8 +41,7 @@ export default function LoginPage() {
           return setError("password", { type: "custom" });
       }
 
-      // TODO: MUDAR PRA PÁGINA DE ERRO
-      console.log("erro insesperoooooooooooooooo");
+      return navigate("/error");
     }
   };
 

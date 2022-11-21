@@ -5,7 +5,7 @@ import api from "../services/api";
 
 export default function Transactions() {
   const { user } = useUser();
-  console.log("i");
+
   return user ? (
     <>
       <h3>PÁGINA DE TRANSAÇÕES! :D</h3> {user.balance}

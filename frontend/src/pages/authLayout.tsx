@@ -8,17 +8,10 @@ import {
 } from "react-router-dom";
 import background from "../assets/login_background.png";
 import logo from "../assets/logo_ng_cash.gif";
-import { AuthStatus } from "../services/auth";
 
 export default function AuthLayout() {
   return (
     <>
-      <AuthStatus />
-      <ul>
-        <li>
-          <Link to="/protected">Protected Page</Link>
-        </li>
-      </ul>
       <div
         className="flex h-[100vh] items-center justify-center"
         style={{ backgroundImage: `url(${background})` }}

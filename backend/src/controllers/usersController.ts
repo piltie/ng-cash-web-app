@@ -65,7 +65,7 @@ export async function loginUser(req: Request, res: Response) {
       const id = account.id;
 
       const token = jwt.sign({ id }, process.env.SECRET!, {
-        expiresIn: "3s",
+        expiresIn: "24h",
       });
 
       const userDTO = asDTO(user, account);
