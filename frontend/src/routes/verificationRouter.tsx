@@ -1,29 +1,59 @@
 import { Outlet, redirect } from "react-router-dom";
 
-import { Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import ExpiredSession from "../components/expiredSession";
 import Login from "../components/login";
 import AuthLayout from "../pages/authLayout";
 
 export default function VerificationLayout() {
-  const [user, setUser] = useState({ username: undefined, token: null });
-
+  const [user, setUser] = useState({ username: "", token: "" });
   const loader = async () => {
-    if (!user.username) return redirect("/login");
+    if (user.username === "") {
+      console.log("foi nao");
+      return <AuthLayout children={<Login teset={socoro} man={user} />} />;
+    }
     if (user.token === null) return redirect("/expiredSession");
   };
 
-  useEffect(() => {
-    loader();
-  }, [user]);
+  const socoro = (data: any) => {
+    console.log("vamo lah");
+    setUser(data);
+  };
 
-  if (!user.username) {
-    return <AuthLayout children={<Login />} />;
-  }
+  useEffect(() => {
+    /*console.log("QUASE LAHHH");
+    if (user.username != "") {
+      console.log(user);
+      console.log("foi??");
+      redirect("/transactions");
+    }*/
+    //loader();
+  }, [user]);
+  const getToken = () => {
+    const tokenString = localStorage.getItem("token");
+
+    const userToken = JSON.parse(tokenString!);
+
+    return userToken?.token;
+  };
+
+  const [token, setToken] = useState(getToken());
+
+  const saveToken = (userToken: any) => {
+    localStorage.setItem("token", JSON.stringify(userToken));
+
+    setToken(userToken.token);
+  };
+  if (!getToken())
+    return (
+      <AuthLayout
+        children={<Login teset={socoro} man={user} si={saveToken} />}
+      />
+    );
   if (user.token === null) {
     return <AuthLayout children={<ExpiredSession />} />;
   }
+  console.log("xá");
 
   return <Outlet />;
 }

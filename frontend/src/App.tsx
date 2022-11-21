@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import "./App.css";
-import api from "./services/api";
+import api from './services/api'
 
 function App() {
   const [data, setData] = useState(null);
@@ -10,6 +10,8 @@ function App() {
     const fetchData = async () => {
       const response = await api.get("/test");
       const data = response.data;
+        .then((response) => response.data)
+        .then((data) => setData(data.msg));
     };
 
     fetchData();

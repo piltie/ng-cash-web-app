@@ -3,7 +3,6 @@ import { FaceFrownIcon } from "@heroicons/react/24/outline";
 
 export default function ErrorPage() {
   const error: any = useRouteError();
-  console.error(error);
 
   return (
     <div className="m-auto flex h-[15em] flex-col justify-between text-center">

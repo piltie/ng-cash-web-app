@@ -10,6 +10,7 @@ import AuthLayout from "./pages/authLayout";
 import Error from "./components/error";
 import Login from "./components/login";
 import ExpiredSession from "./components/expiredSession";
+import AppLayout from "./pages/appLayout";
 
 const authRoute = createBrowserRouter([
   {
@@ -18,16 +19,16 @@ const authRoute = createBrowserRouter([
     errorElement: <AuthLayout children={<Error />} />,
     children: [
       {
-        index: true,
-        element: <AuthLayout children={<Login />} />,
-      },
-      {
         path: "login",
-        element: <AuthLayout children={<Login />} />,
+        element: <VerificationLayout />,
       },
       {
         path: "expiredSession",
         element: <AuthLayout children={<ExpiredSession />} />,
+      },
+      {
+        path: "transactions",
+        element: <AppLayout />,
       },
     ],
   },
