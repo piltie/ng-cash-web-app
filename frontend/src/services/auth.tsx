@@ -56,6 +56,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 export function AuthStatus() {
   let auth = useAuth();
   let navigate = useNavigate();
+  let location = useLocation();
+
+  console.log(location);
 
   if (!auth.user) {
     return <p>You are not logged in.</p>;
@@ -76,20 +79,10 @@ export function AuthStatus() {
 }
 
 export function RequireAuth({ children }: { children: JSX.Element }) {
-  //let auth = useAuth();
   let location = useLocation();
 
   if (!localStorage.getItem("x-access-token")) {
-    // Redirect them to the /login page, but save the current location they were
-    // trying to go to when they were redirected. This allows us to send them
-    // along to that page after they login, which is a nicer user experience
-    // than dropping them off on the home page.
-
     return <Navigate to="/login" state={{ from: location }} replace />;
-  }
-
-  if (localStorage.getItem("x-access-token") === undefined) {
-    return <Navigate to="/expiredToken" state={{ from: location }} replace />;
   }
 
   return children;
@@ -102,7 +95,7 @@ export function CheckAuth({ children }: { children: JSX.Element }) {
     location.pathname != "/expiredSession" &&
     localStorage.getItem("x-access-token")
   ) {
-    console.log("ue");
+    console.log("vei...");
     return <Navigate to="/transactions" state={{ from: location }} replace />;
   }
 

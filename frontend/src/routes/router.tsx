@@ -4,6 +4,8 @@ import Transactions from "../components/transactions";
 import { AuthProvider, RequireAuth, CheckAuth } from "../services/auth";
 import AuthLayout from "../pages/authLayout";
 import AppLayout from "../pages/appLayout";
+import ErrorPage from "../components/error";
+import ExpiredToken from "../components/expiredToken";
 
 export default function Router() {
   return (
@@ -26,17 +28,18 @@ export default function Router() {
               </CheckAuth>
             }
           />
+          <Route path="/error" element={<ErrorPage />}></Route>
+          <Route path="/expiredToken" element={<ExpiredToken />}></Route>
         </Route>
 
-        <Route element={<AppLayout />}>
-          <Route
-            path="/transactions"
-            element={
-              <RequireAuth>
-                <Transactions />
-              </RequireAuth>
-            }
-          />
+        <Route
+          element={
+            <RequireAuth>
+              <AppLayout />
+            </RequireAuth>
+          }
+        >
+          <Route path="/transactions" element={<Transactions />} />
         </Route>
       </Routes>
     </AuthProvider>

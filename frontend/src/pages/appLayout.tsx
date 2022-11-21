@@ -1,6 +1,12 @@
+import axios from "axios";
 import React, { useEffect } from "react";
-import { useState } from "react";
-import { Navigate, Outlet, useOutletContext } from "react-router-dom";
+import {
+  Outlet,
+  useLocation,
+  useOutletContext,
+  useNavigate,
+  Navigate,
+} from "react-router-dom";
 import api from "../services/api";
 import { AuthStatus } from "../services/auth";
 
@@ -13,35 +19,38 @@ type ContextType = { user: usee | null };
 
 export default function AppLayout() {
   const [user, setUser] = React.useState<usee | null>(null);
+  let navigate = useNavigate();
+  let location = useLocation();
+
+  const getBalance = async () => {
+    try {
+      let config = {
+        headers: {
+          "x-access-token": localStorage.getItem("x-access-token"),
+        },
+      };
+
+      const response = await api.get("/user/info", config);
+      const data = response.data;
+
+      if (!data.userDTO) {
+        throw new Error();
+      }
+
+      setUser(data.userDTO);
+    } catch (e) {
+      if (axios.isAxiosError(e)) {
+        if (e.response!.status == 401) {
+          console.log("huuuuuuuuu");
+          localStorage.removeItem("x-access-token");
+          return navigate("/expiredToken");
+        }
+      }
+      return navigate("/error");
+    }
+  };
 
   useEffect(() => {
-    const getBalance = async () => {
-      try {
-        let config = {
-          headers: {
-            "x-access-token": localStorage.getItem("x-access-token"),
-          },
-        };
-
-        const response = await api.get("/user/info", config);
-        const data = response.data;
-
-        if (!data.userDTO)
-          return (
-            <Navigate
-              to="/expiredToken"
-              state={{ from: "/transactions" }}
-              replace
-            />
-          );
-        console.log("SOCOOR");
-        setUser(data.userDTO);
-        console.log(user);
-      } catch (e) {
-        console.log("erooooooooooooo");
-      }
-    };
-
     getBalance();
   }, []);
 
