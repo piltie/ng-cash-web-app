@@ -9,6 +9,9 @@ import {
 } from "react-router-dom";
 import SideBar from "../components/sidebar";
 import api from "../services/api";
+import MobileScreen from "../components/mobileScreen";
+import purpleStar from "../assets/purple-star.svg";
+import blackStar from "../assets/black-star.svg";
 
 type IUserData = {
   username: string;
@@ -35,7 +38,7 @@ export default function AppLayout() {
 
       const response = await api.get("/user/info", config);
       const data = response.data;
-
+      console.log(data);
       if (!data.userDTO) {
         throw new Error();
       }
@@ -57,12 +60,21 @@ export default function AppLayout() {
   }, []);
 
   return (
-    <div className="flex">
-      <SideBar className="z-10" user={user} />
-      <div className="z-10 ml-[2em]">
-        <Outlet context={{ user, setUser }} />
+    <>
+      <MobileScreen />
+      <div className="flex  max-[1070px]:text-[0.8em] ">
+        <SideBar className="z-10" user={user} />
+        <div
+          className="z-10 ml-[4em] mr-[4em] max-[1200px]:w-[100%]
+        "
+        >
+          <Outlet context={{ user, setUser }} />
+        </div>
       </div>
-    </div>
+      <img src={blackStar} className="absolute top-2 right-7 z-10 w-[1.5em]" />
+      <img src={purpleStar} className="absolute top-4 right-10 z-10 w-[3em]" />
+      <img src={blackStar} className="absolute top-12 right-6 z-10 w-[1.8em]" />
+    </>
   );
 }
 

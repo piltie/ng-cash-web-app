@@ -8,6 +8,7 @@ import {
 } from "react-router-dom";
 import background from "../assets/login_background.png";
 import logo from "../assets/logo_ng_cash.gif";
+import MobileScreen from "../components/mobileScreen";
 
 export default function AuthLayout() {
   let location = useLocation();
@@ -15,6 +16,7 @@ export default function AuthLayout() {
 
   return (
     <>
+      <MobileScreen />
       <div
         className="flex h-[100vh] items-center justify-center"
         style={{ backgroundImage: `url(${background})` }}

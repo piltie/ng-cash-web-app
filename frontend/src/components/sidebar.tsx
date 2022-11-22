@@ -6,7 +6,7 @@ import { ArrowLeftOnRectangleIcon } from "@heroicons/react/24/outline";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../services/auth";
 import { BanknotesIcon, ClockIcon } from "@heroicons/react/24/outline";
-import axios from "axios";
+import ResponseMessage from "../util/responseMessage";
 
 export default function SideBar({ user }: any) {
   const [balance, setBalance] = useState<null | string>(null);
@@ -18,7 +18,7 @@ export default function SideBar({ user }: any) {
     try {
       auth.signout();
     } catch (e) {
-      console.clear();
+      //console.clear();
 
       return navigate("/error");
     }
@@ -42,52 +42,59 @@ export default function SideBar({ user }: any) {
   };
 
   return (
-    <div className="sticky top-0 flex h-[100vh] w-[25em] flex-col justify-between bg-black text-white">
-      <div className="ml-[2em] mt-[2em] flex w-[18em] items-center justify-between">
-        <img className="w-[6em]" src={userpic} />
-        <div>
-          <h1 className="text-[1.7em]">
-            Olá, {user ? user.username : "Aguarde..."}
-          </h1>
-          <div className="flex items-center">
-            <div onClick={balanceToggle} className="w-[1em] cursor-pointer">
-              <EyeIcon id="showPassword" />
-              <EyeSlashIcon id="hidePassword" className=" hidden " />
+    <div className="sticky top-0 flex h-[100vh]  min-w-[25em] flex-col justify-between bg-black text-white">
+      <div className="flex flex-col">
+        <div className="ml-[2em] mt-[2em] flex w-[18em] items-center justify-between">
+          <img className="w-[6em]" src={userpic} />
+          {!user ? (
+            <div className="mr-[3em]">
+              <ResponseMessage type="loading" message="Aguarde..." />
             </div>
-            <h1 className="ml-[0.5em] flex items-center ">
-              Saldo: R${" "}
-              <span id="balance" className="ml-[0.2em] ">
-                {user ? user.balance : "Aguarde..."}{" "}
-              </span>{" "}
-            </h1>
+          ) : (
+            <div>
+              <h1 className="text-[1.7em]">Olá, {user.username}</h1>
+              <div className="flex items-center">
+                <div onClick={balanceToggle} className="w-[1em] cursor-pointer">
+                  <EyeIcon id="showPassword" />
+                  <EyeSlashIcon id="hidePassword" className=" hidden " />
+                </div>
+                <h1 className="ml-[0.5em] flex items-center ">
+                  Saldo: R${" "}
+                  <span id="balance" className="ml-[0.2em] ">
+                    {user.balance}
+                  </span>{" "}
+                </h1>
+              </div>
+            </div>
+          )}
+        </div>
+        <div className="mt-[3em] text-[1.3em] ">
+          <div
+            className={`border-y-[0.25px] border-solid border-white hover:text-[#7431f4] ${
+              location.pathname === "/transactions"
+                ? "text-[#7431f4]"
+                : "text-white"
+            }`}
+          >
+            <Link to="/transactions" className="flex items-center pl-[2em]">
+              <BanknotesIcon className=" w-[1em] " />
+              <h2 className="py-[1em] pl-[1em]"> Nova Transação</h2>
+            </Link>
+          </div>
+          <div
+            className={`border-y-[0.25px] border-t-0 border-solid border-white hover:text-[#7431f4] ${
+              location.pathname === "/history" ? "text-[#7431f4]" : "text-white"
+            }`}
+          >
+            <Link to="/history" className="flex items-center pl-[2em]">
+              <ClockIcon className=" w-[1em] " />
+              <h2 className=" py-[1em] pl-[1em]">Histórico</h2>
+            </Link>
           </div>
         </div>
       </div>
-      <div className="mb-[10em] text-[1.3em] ">
-        <div
-          className={`border-y-[0.25px] border-solid border-white hover:text-[#7431f4] ${
-            location.pathname === "/transactions"
-              ? "text-[#7431f4]"
-              : "text-white"
-          }`}
-        >
-          <Link to="/transactions" className="flex items-center pl-[2em]">
-            <BanknotesIcon className=" w-[1em] " />
-            <h2 className="py-[1em] pl-[1em]"> Nova Transação</h2>
-          </Link>
-        </div>
-        <div
-          className={`border-y-[0.25px] border-t-0 border-solid border-white hover:text-[#7431f4] ${
-            location.pathname === "/history" ? "text-[#7431f4]" : "text-white"
-          }`}
-        >
-          <Link to="/history" className="flex items-center pl-[2em]">
-            <ClockIcon className=" w-[1em] " />
-            <h2 className=" py-[1em] pl-[1em]">Histórico</h2>
-          </Link>
-        </div>
-      </div>
-      <div className="flex items-center justify-between">
+
+      <div className="mb-[1em] flex items-center justify-between">
         <div
           onClick={signOut}
           className="ml-[2em] flex w-[4.5em] cursor-pointer items-center justify-between hover:text-[#ff00ff]"

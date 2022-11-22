@@ -1,11 +1,24 @@
-import { UserIcon } from "@heroicons/react/24/solid";
-import { CurrencyDollarIcon } from "@heroicons/react/24/solid";
+// Request API
 import axios from "axios";
+import api from "../services/api";
+
+// React stuff
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useUser } from "../pages/appLayout";
-import api from "../services/api";
+
+// Images
+import corner from "../assets/corner-image.svg";
+import purpleStar from "../assets/purple-star.svg";
+import blackStar from "../assets/black-star.svg";
+
+// Icons
+import { UserIcon } from "@heroicons/react/24/solid";
+import { CurrencyDollarIcon } from "@heroicons/react/24/solid";
+
+// Components
+import ResponseMessage from "../util/responseMessage";
 
 type transactionData = {
   username: string;
@@ -33,16 +46,22 @@ export default function Transactions() {
     handleSubmit,
   } = useForm<transactionData>();
   let navigate = useNavigate();
+
+  const [state, setState] = useState<null | "loading" | "success">(null);
+
   const { user } = useUser();
   const { setUser } = useUser();
 
   const onSubmit = async (formData: transactionData) => {
+    setState("loading");
+
     if (parseFloat(user!.balance) < formData.value) {
       return setError("value", {
         type: "custom",
         message: "* Você não possui saldo suficiente.",
       });
     }
+
     try {
       console.log(formData);
       let config = {
@@ -54,9 +73,12 @@ export default function Transactions() {
       const response = await api.post("transaction/create", formData, config);
       const data = response.data;
 
+      setState("success");
+
       setUser({ username: user!.username, balance: data.balance });
     } catch (e) {
-      console.clear();
+      setState(null);
+      //console.clear();
       if (axios.isAxiosError(e)) {
         if (e.response!.status === 400)
           return setError("username", { type: "custom" });
@@ -86,7 +108,7 @@ export default function Transactions() {
       </h1>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex h-[20em] w-[30em]  flex-col justify-between pt-[2em] text-[1.2em] md:mt-0"
+        className="flex h-[20em] w-[37em] flex-col  justify-between pt-[2em] text-[1.2em] max-[1200px]:w-[100%] md:mt-0"
       >
         <label className="font-bold">
           Para quem você deseja enviar?{" "}
@@ -133,7 +155,7 @@ export default function Transactions() {
             type="number"
             className="peer w-[100%] p-1 outline-none "
             placeholder="Digite o valor"
-            {...register("value", { required: true })}
+            {...register("value", { required: true, min: 1 })}
             aria-invalid={errors.value ? "true" : "false"}
           />
 
@@ -148,14 +170,25 @@ export default function Transactions() {
         >
           {errors.value?.message ? errors.value.message : "* Valor inválido."}
         </span>
-
-        <button
-          type="submit"
-          className="w-[20em]  rounded bg-black p-[0.3em] text-white hover:bg-[#7431f4] "
-        >
-          Realizar Transação
-        </button>
+        <div className="flex items-center">
+          <button
+            type="submit"
+            className="w-[20em] rounded   bg-black p-[0.8em] text-white hover:bg-[#7431f4] "
+          >
+            Realizar Transação
+          </button>
+          {state === "loading" && (
+            <ResponseMessage type="loading" message="Aguarde..." />
+          )}
+          {state === "success" && (
+            <ResponseMessage type="success" message="Transação efetuada!" />
+          )}
+        </div>
       </form>
+      <img src={blackStar} className="absolute top-2 right-7 z-10 w-[1.5em]" />
+      <img src={purpleStar} className="absolute top-4 right-10 z-10 w-[3em]" />
+      <img src={blackStar} className="absolute top-12 right-6 z-10 w-[1.8em]" />
+      <img src={corner} className="absolute bottom-0 right-0 z-10 w-[15em]" />
     </>
   );
 }

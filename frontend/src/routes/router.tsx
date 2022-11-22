@@ -8,7 +8,7 @@ import ErrorPage from "../components/error";
 import History from "../components/history";
 import ExpiredToken from "../components/expiredToken";
 import Register from "../components/register";
-import Success from "../components/success";
+import Success from "../components/successRegister";
 
 export default function Router() {
   return (

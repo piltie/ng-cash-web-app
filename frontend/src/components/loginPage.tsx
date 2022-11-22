@@ -1,11 +1,20 @@
-import { redirect, useLocation, useNavigate } from "react-router-dom";
+// Request and auth stuff
+import axios from "axios";
 import { useAuth } from "../services/auth";
+
+// React stuff
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useState } from "react";
+
+// Icons
 import { UserIcon } from "@heroicons/react/24/solid";
 import { EyeIcon } from "@heroicons/react/24/solid";
 import { EyeSlashIcon } from "@heroicons/react/24/solid";
-import axios from "axios";
+
+// Components
+import ResponseMessage from "../util/responseMessage";
 
 export type formData = {
   username: string;
@@ -20,6 +29,8 @@ export default function LoginPage() {
     handleSubmit,
   } = useForm<formData>();
 
+  const [state, setState] = useState<null | "loading">(null);
+
   let navigate = useNavigate();
   let location = useLocation();
   let auth = useAuth();
@@ -27,12 +38,15 @@ export default function LoginPage() {
   let from = location.state?.from?.pathname || "/";
 
   const onSubmit = async (formData: formData) => {
+    setState("loading");
+
     try {
       await auth.signin(formData);
 
       navigate(from, { replace: true });
     } catch (e) {
-      console.clear();
+      setState(null);
+
       if (axios.isAxiosError(e)) {
         if (e.response!.status === 400)
           return setError("username", { type: "custom" });
@@ -139,12 +153,17 @@ export default function LoginPage() {
             * Senha inválida.
           </span>
 
-          <button
-            type="submit"
-            className="w-[7em] rounded bg-black p-[0.3em] text-white hover:bg-[#7431f4] "
-          >
-            Entrar
-          </button>
+          <div className="flex">
+            <button
+              type="submit"
+              className="w-[7em] rounded bg-black p-[0.3em] text-white hover:bg-[#7431f4] "
+            >
+              Entrar
+            </button>
+            {state === "loading" && (
+              <ResponseMessage type="loading" message="Aguarde..." />
+            )}
+          </div>
         </form>
         <Link
           className="group mt-[1em] hover:text-gray-600 md:mt-0  "

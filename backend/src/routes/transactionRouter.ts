@@ -8,6 +8,7 @@ import { transactionCreateValidation } from "../middleware/transactionValidation
 // Controller
 import {
   createTransaction,
+  getAllHistory,
   getCashInHistory,
   getCashOutHistory,
 } from "../controllers/transactionsControllers";
@@ -23,4 +24,5 @@ export default transactionRouter
     createTransaction
   )
   .get("/cashin", checkToken, getCashInHistory)
-  .get("/cashout", checkToken, getCashOutHistory);
+  .get("/cashout", checkToken, getCashOutHistory)
+  .get("/all", checkToken, getAllHistory);

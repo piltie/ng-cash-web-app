@@ -67,7 +67,7 @@ export async function getCashInHistory(req: Request, res: Response) {
   try {
     const id = req.body.accountId;
     const transactions = await transactionServices.findAllCashIn(id);
-    const transactionsDTO = await asDTO(transactions, "cashIn");
+    const transactionsDTO = await asDTO(transactions, id);
 
     return res.status(200).json({ transactionsDTO });
   } catch (e: any) {
@@ -84,7 +84,26 @@ export async function getCashOutHistory(req: Request, res: Response) {
   try {
     const id = req.body.accountId;
     const transactions = await transactionServices.findAllCashOut(id);
-    const transactionsDTO = await asDTO(transactions, "cashOut");
+    const transactionsDTO = await asDTO(transactions, id);
+
+    return res.status(200).json({ transactionsDTO });
+  } catch (e: any) {
+    return res.status(500).json({
+      message: `Unexpected error.`,
+      e,
+    });
+  }
+}
+
+export async function getAllHistory(req: Request, res: Response) {
+  const transactionServices = new TransactionServices();
+
+  try {
+    const id = req.body.accountId;
+
+    const transactions = await transactionServices.findAll(id);
+
+    const transactionsDTO = await asDTO(transactions, id);
 
     return res.status(200).json({ transactionsDTO });
   } catch (e: any) {

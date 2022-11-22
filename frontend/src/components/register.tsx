@@ -1,12 +1,21 @@
-import { redirect, useLocation, useNavigate } from "react-router-dom";
+// Request and auth stuff
+import axios from "axios";
+import api from "../services/api";
 import { useAuth } from "../services/auth";
+
+// React stuff
+import { useLocation, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
+
+// Icons
 import { UserIcon } from "@heroicons/react/24/solid";
 import { EyeIcon } from "@heroicons/react/24/solid";
 import { EyeSlashIcon } from "@heroicons/react/24/solid";
-import axios from "axios";
-import api from "../services/api";
+
+// Components
+import ResponseMessage from "../util/responseMessage";
+import { useState } from "react";
 
 export type formData = {
   username: string;
@@ -21,14 +30,15 @@ export default function Register() {
     handleSubmit,
   } = useForm<formData>();
 
-  let navigate = useNavigate();
-  let location = useLocation();
-  let auth = useAuth();
+  const [state, setState] = useState<null | "loading">(null);
 
-  let from = location.state?.from?.pathname || "/";
+  let navigate = useNavigate();
 
   const onSubmit = async (formData: formData) => {
+    setState("loading");
+
     if (!/\d/.test(formData.password) || !/[A-Z]/.test(formData.password)) {
+      setState(null);
       return setError("password", { type: "custom" });
     }
 
@@ -38,7 +48,8 @@ export default function Register() {
 
       navigate("/success");
     } catch (e) {
-      //console.clear();
+      setState(null);
+
       if (axios.isAxiosError(e)) {
         if (e.response!.status === 400)
           return setError("username", {
@@ -102,7 +113,7 @@ export default function Register() {
             <input
               className="peer w-[100%] rounded-r-full p-1 outline-none"
               placeholder="Digite o usuário"
-              {...register("username", { required: true, min: 3 })}
+              {...register("username", { required: true, minLength: 3 })}
               aria-invalid={errors.username ? "true" : "false"}
             />
             <UserIcon className="mx-[0.6em] h-4 w-4 self-center peer-placeholder-shown:text-gray-400 " />
@@ -135,7 +146,7 @@ export default function Register() {
               id="password"
               className="peer w-[100%] rounded-r-full p-1 outline-none"
               placeholder="Digite a senha"
-              {...register("password", { required: true, min: 8 })}
+              {...register("password", { required: true, minLength: 8 })}
               aria-invalid={errors.password ? "true" : "false"}
             />
 
@@ -157,12 +168,17 @@ export default function Register() {
             * Senha inválida.
           </span>
 
-          <button
-            type="submit"
-            className="w-[7em] rounded bg-black p-[0.3em] text-white hover:bg-[#7431f4] "
-          >
-            Cadastrar
-          </button>
+          <div className="flex">
+            <button
+              type="submit"
+              className="w-[7em] rounded bg-black p-[0.3em] text-white hover:bg-[#7431f4] "
+            >
+              Cadastrar
+            </button>
+            {state === "loading" && (
+              <ResponseMessage type="loading" message="Aguarde..." />
+            )}
+          </div>
         </form>
         <Link
           className="group mt-[1em] hover:text-gray-600 md:mt-0  "

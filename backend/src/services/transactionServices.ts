@@ -1,3 +1,4 @@
+import { Op } from "sequelize";
 import Transaction from "../models/Transaction";
 
 interface ITransactionCreate {
@@ -12,7 +13,7 @@ export default class TransactionServices {
     creditedAccountId,
     value,
   }: ITransactionCreate) {
-    const date = new Date().toISOString();
+    const date = new Date().toISOString().substring(0, 10);
 
     const transaction = await Transaction.create({
       debitedAccountId,
@@ -52,6 +53,19 @@ export default class TransactionServices {
     const transactions = await Transaction.findAll({
       where: {
         debitedAccountId: id,
+      },
+    });
+
+    if (!transactions)
+      throw Error("Couldn't search for cash-out transactions.");
+
+    return transactions;
+  }
+
+  async findAll(id: string) {
+    const transactions = await Transaction.findAll({
+      where: {
+        [Op.or]: [{ debitedAccountId: id }, { creditedAccountId: id }],
       },
     });
 
