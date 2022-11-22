@@ -50,9 +50,9 @@ export default function AppLayout() {
       }
 
       setUser(data.userDTO);
-    } catch (e) {
+    } catch (e: any) {
       if (axios.isAxiosError(e)) {
-        if (e.response!.status == 401) {
+        if (e.response!.status == 401 || !e.response!.data.auth) {
           localStorage.removeItem("x-access-token");
           return navigate("/expiredToken");
         }

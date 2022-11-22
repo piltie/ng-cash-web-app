@@ -56,14 +56,14 @@ export default function SideBar({ user }: any) {
   return (
     <div className="sticky top-0 flex h-[100vh]  min-w-[25em] flex-col justify-between bg-black text-white">
       <div className="flex flex-col">
-        <div className="ml-[2em] mt-[2em] flex w-[18em] items-center justify-between">
+        <div className="mt-[2em]  flex items-center justify-center">
           <img className="w-[6em]" src={userpic} />
           {!user ? (
             <div className="mr-[3em]">
               <ResponseMessage type="loading" message="Aguarde..." />
             </div>
           ) : (
-            <div>
+            <div className="ml-[2em]">
               <h1 className="text-[1.7em]">Olá, {user.username}</h1>
               <div className="flex items-center">
                 <div onClick={balanceToggle} className="w-[1em] cursor-pointer">

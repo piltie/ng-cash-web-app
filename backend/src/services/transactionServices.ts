@@ -13,7 +13,7 @@ export default class TransactionServices {
     creditedAccountId,
     value,
   }: ITransactionCreate) {
-    const date = new Date().toISOString().substring(0, 10);
+    const date = new Date().toISOString();
 
     const transaction = await Transaction.create({
       debitedAccountId,

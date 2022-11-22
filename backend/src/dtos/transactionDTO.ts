@@ -2,7 +2,7 @@ import Transaction from "../models/Transaction";
 import UserServices from "../services/userServices";
 
 interface ITransactionDTO {
-  id: string;
+  transactionId: string;
   username: string;
   value: number;
   type: "cashIn" | "cashOut";
@@ -14,7 +14,7 @@ export default async function asDTO(transactions: Transaction[], id: string) {
   const userServices = new UserServices();
 
   for (const transaction of transactions) {
-    const id = transaction.id;
+    const transactionId = transaction.id;
     const value = transaction.value;
     const date = transaction.createdAt;
     let username;
@@ -39,14 +39,14 @@ export default async function asDTO(transactions: Transaction[], id: string) {
     }
 
     const transactionDTO: ITransactionDTO = {
-      id,
+      transactionId,
       username: username,
       value,
       type: type,
       date,
     };
 
-    data.push(transactionDTO);
+    data.push({ transactionDTO });
   }
   return data;
 }

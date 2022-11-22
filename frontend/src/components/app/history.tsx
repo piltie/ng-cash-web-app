@@ -17,11 +17,13 @@ import { CalendarDaysIcon } from "@heroicons/react/24/solid";
 
 // History response format
 interface IHistoryData {
-  date: string;
-  id: string;
-  type: string;
-  username: string;
-  value: number;
+  transactionDTO: {
+    date: string;
+    transactionId: string;
+    type: string;
+    username: string;
+    value: number;
+  };
 }
 
 // Filter form format
@@ -102,8 +104,11 @@ export default function History() {
       }
 
       const sortedData = data.transactionsDTO.filter((data: any) => {
-        if (new Date(data.date) <= dateTo && new Date(data.date) >= dateFrom)
-          return data;
+        if (
+          new Date(data.transactionDTO.date) <= dateTo &&
+          new Date(data.transactionDTO.date) >= dateFrom
+        )
+          return data.transactionDTO;
       });
 
       setState(null);
@@ -235,7 +240,7 @@ export default function History() {
           <div className="flex ">
             <img src={blackStar} className=" w-[1.5em]" />
             <h1 className="ml-[0.5em] text-[1.3em]">
-              Nenhuma transação nesse período encontrada.
+              Nenhuma transação encontrada nesse período.
             </h1>
           </div>
         )}{" "}
@@ -257,23 +262,31 @@ export default function History() {
               <div className="mb-[2em] rounded-2xl border-r-[7px] border-b-[7px] border-solid  border-black bg-black">
                 <div
                   className="flex h-[11em] flex-col justify-around rounded-2xl border-[1px] border-solid border-black bg-white p-[2em]"
-                  key={transaction.id}
+                  key={transaction.transactionDTO.transactionId}
                 >
                   <div className="font-semibold tracking-widest">
-                    {transaction.type === "cashIn" ? "ENTRADA" : "SAÍDA"}
+                    {transaction.transactionDTO.type === "cashIn"
+                      ? "ENTRADA"
+                      : "SAÍDA"}
                   </div>
                   <div className="flex flex-col">
                     <div className="flex">
                       <UserIcon className="w-[1em]" />
-                      <span className="ml-[0.3em]">{transaction.username}</span>
+                      <span className="ml-[0.3em]">
+                        {transaction.transactionDTO.username}
+                      </span>
                     </div>
                     <div className="flex">
                       <CurrencyDollarIcon className="w-[1em]" />
-                      <span className="ml-[0.3em]">{transaction.value}</span>
+                      <span className="ml-[0.3em]">
+                        {transaction.transactionDTO.value}
+                      </span>
                     </div>
                     <div className="flex">
                       <CalendarDaysIcon className="w-[1em]" />
-                      <span className="ml-[0.3em]">{transaction.date}</span>
+                      <span className="ml-[0.3em]">
+                        {transaction.transactionDTO.date}
+                      </span>
                     </div>
                   </div>
                 </div>

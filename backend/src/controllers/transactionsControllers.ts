@@ -15,7 +15,7 @@ export async function createTransaction(req: Request, res: Response) {
 
   try {
     const id = req.body.accountId;
-    const value = req.body.value;
+    const value = parseFloat(req.body.value);
 
     const debitedAccount = await accountServices.findById(id);
     const creditedUser = await userServices.findByUsername(req.body.username);

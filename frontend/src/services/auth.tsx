@@ -50,7 +50,7 @@ export function RequireAuth({ children }: { children: JSX.Element }) {
   return children;
 }
 
-// Checks if the token is expired (used when the user is already logged in)
+// Checks if the user already has logged in, so he doesn't access /login and /register (if it has a token; the requests made in the children will tell if the token is expired or not by the API response)
 export function CheckAuth({ children }: { children: JSX.Element }) {
   let location = useLocation();
 
