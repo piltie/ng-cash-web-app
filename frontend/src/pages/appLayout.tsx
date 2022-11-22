@@ -7,17 +7,18 @@ import {
   useNavigate,
   Navigate,
 } from "react-router-dom";
+import SideBar from "../components/sidebar";
 import api from "../services/api";
 
-type usee = {
+type IUserData = {
   username: string;
   balance: string;
 };
 
-type ContextType = { user: usee | null };
+type ContextType = { user: IUserData | null };
 
 export default function AppLayout() {
-  const [user, setUser] = React.useState<usee | null>(null);
+  const [user, setUser] = React.useState<IUserData | null>(null);
   let navigate = useNavigate();
   let location = useLocation();
 
@@ -53,10 +54,12 @@ export default function AppLayout() {
   }, []);
 
   return (
-    <>
-      INFORMAÇÕES DA SIDEBAR: <hr />
-      <Outlet context={{ user }} />
-    </>
+    <div className="flex">
+      <SideBar user={user} />
+      <div className="ml-[2em]">
+        <Outlet context={{ user }} />
+      </div>
+    </div>
   );
 }
 

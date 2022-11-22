@@ -6,7 +6,6 @@ import { UserIcon } from "@heroicons/react/24/solid";
 import { EyeIcon } from "@heroicons/react/24/solid";
 import { EyeSlashIcon } from "@heroicons/react/24/solid";
 import axios from "axios";
-import { useEffect } from "react";
 
 export type formData = {
   username: string;
@@ -116,7 +115,7 @@ export default function LoginPage() {
             <input
               type="password"
               id="password"
-              className="peer w-[100%] rounded-r-full p-1 outline-none invalid:bg-red-700"
+              className="peer w-[100%] rounded-r-full p-1 outline-none"
               placeholder="Digite sua senha"
               {...register("password", { required: true })}
               aria-invalid={errors.password ? "true" : "false"}

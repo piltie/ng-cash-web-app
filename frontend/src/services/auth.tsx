@@ -9,12 +9,14 @@ export function useAuth() {
 
 interface AuthContextType {
   signin: (user: formData) => Promise<any>;
-  signout: (callback: VoidFunction) => void;
+  signout: () => void;
 }
 
 let AuthContext = React.createContext<AuthContextType>(null!);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
+  let navigate = useNavigate();
+
   let signin = async (newUser: formData) => {
     const response = await api.post("/user/login", newUser);
     const data = response.data;
@@ -24,10 +26,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return response;
   };
 
-  let signout = (callback: VoidFunction) => {
+  let signout = () => {
     localStorage.removeItem("x-access-token");
 
-    callback();
+    return navigate("/login");
   };
 
   let value = { signin, signout };

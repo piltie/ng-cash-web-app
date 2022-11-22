@@ -5,6 +5,7 @@ module.exports = {
     extend: {
       fontFamily: {
         ibm: "IBM Plex Sans",
+        tech: "Share Tech Mono",
       },
     },
   },

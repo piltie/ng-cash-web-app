@@ -84,17 +84,6 @@ export async function loginUser(req: Request, res: Response) {
   }
 }
 
-export async function logoutUser(req: Request, res: Response) {
-  try {
-    res.status(200).json({ token: null });
-  } catch (e: any) {
-    return res.status(500).json({
-      message: `Unexpected error.`,
-      e,
-    });
-  }
-}
-
 export async function getUserInfo(req: Request, res: Response) {
   const accountServices = new AccountServices();
   const userServices = new UserServices();
