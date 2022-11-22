@@ -1,7 +1,11 @@
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 import { ArrowRightOnRectangleIcon } from "@heroicons/react/24/outline";
+
 import { Link } from "react-router-dom";
 
+/* EXPIRED TOKEN FUNCTION
+-> The user is redirected to this route when they make a request and the token isn't valid. 
+*/
 export default function ExpiredToken() {
   return (
     <div className="m-auto flex h-[15em] flex-col justify-between text-center">

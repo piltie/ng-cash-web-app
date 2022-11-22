@@ -1,12 +1,12 @@
 // Request and auth stuff
 import axios from "axios";
-import api from "../services/api";
-import { useAuth } from "../services/auth";
+import { useAuth } from "../../services/auth";
 
 // React stuff
-import { useLocation, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 // Icons
 import { UserIcon } from "@heroicons/react/24/solid";
@@ -14,15 +14,15 @@ import { EyeIcon } from "@heroicons/react/24/solid";
 import { EyeSlashIcon } from "@heroicons/react/24/solid";
 
 // Components
-import ResponseMessage from "../util/responseMessage";
-import { useState } from "react";
+import ResponseMessage from "../responseMessage";
 
+// Login form info inputed by the user
 export type formData = {
   username: string;
   password: string;
 };
 
-export default function Register() {
+export default function LoginPage() {
   const {
     register,
     setError,
@@ -33,29 +33,26 @@ export default function Register() {
   const [state, setState] = useState<null | "loading">(null);
 
   let navigate = useNavigate();
+  let location = useLocation();
+  let auth = useAuth();
+
+  let from = location.state?.from?.pathname || "/";
 
   const onSubmit = async (formData: formData) => {
     setState("loading");
 
-    if (!/\d/.test(formData.password) || !/[A-Z]/.test(formData.password)) {
-      setState(null);
-      return setError("password", { type: "custom" });
-    }
-
     try {
-      const response = await api.post("/user/create", formData);
-      const data = response.data;
+      await auth.signin(formData);
 
-      navigate("/success");
+      navigate(from, { replace: true });
     } catch (e) {
       setState(null);
 
       if (axios.isAxiosError(e)) {
         if (e.response!.status === 400)
-          return setError("username", {
-            type: "custom",
-            message: "* Já existe um usuário com esse nome.",
-          });
+          return setError("username", { type: "custom" });
+        if (e.response!.status === 401)
+          return setError("password", { type: "custom" });
       }
 
       return navigate("/error");
@@ -83,23 +80,14 @@ export default function Register() {
   return (
     <>
       <div className="flex w-[100%] flex-col md:justify-between">
-        <div>
-          <h1 className="text-[24px] font-bold">Junte-se a nós!</h1>
-          <h2>Confira os requisitos abaixo para criar uma conta NG.CASH:</h2>
-          <ul className="mt-[1em]">
-            <li>- Usuário: Mínimo de 3 caracteres.</li>
-            <li>
-              - Senha: Mínimo de 8 caracteres; Ao menos uma letra maíscula e um
-              número.
-            </li>
-          </ul>
-        </div>
+        <h1 className="text-[24px] font-bold">Fazer Login</h1>
+
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="mt-[1em] flex h-[15em] flex-col justify-between md:mt-0"
         >
           <label className="font-bold">
-            Crie um usuário{" "}
+            Usuário{" "}
             <span
               role="alert"
               className={` text-pink-600  ${
@@ -112,8 +100,8 @@ export default function Register() {
           <div className="flex flex-row-reverse rounded-full border-[1px] border-solid border-black  outline-2 outline-gray-300 focus-within:outline">
             <input
               className="peer w-[100%] rounded-r-full p-1 outline-none"
-              placeholder="Digite o usuário"
-              {...register("username", { required: true, minLength: 3 })}
+              placeholder="Digite seu usuário"
+              {...register("username", { required: true })}
               aria-invalid={errors.username ? "true" : "false"}
             />
             <UserIcon className="mx-[0.6em] h-4 w-4 self-center peer-placeholder-shown:text-gray-400 " />
@@ -125,12 +113,10 @@ export default function Register() {
               errors.username ? "visible" : "invisible"
             }`}
           >
-            {errors.username?.message
-              ? errors.username.message
-              : "* Usuário inválido."}
+            * Usuário inválido.
           </span>
           <label className="font-bold">
-            Crie uma senha{" "}
+            Senha{" "}
             <span
               role="alert"
               className={` text-pink-600  ${
@@ -145,8 +131,8 @@ export default function Register() {
               type="password"
               id="password"
               className="peer w-[100%] rounded-r-full p-1 outline-none"
-              placeholder="Digite a senha"
-              {...register("password", { required: true, minLength: 8 })}
+              placeholder="Digite sua senha"
+              {...register("password", { required: true })}
               aria-invalid={errors.password ? "true" : "false"}
             />
 
@@ -173,7 +159,7 @@ export default function Register() {
               type="submit"
               className="w-[7em] rounded bg-black p-[0.3em] text-white hover:bg-[#7431f4] "
             >
-              Cadastrar
+              Entrar
             </button>
             {state === "loading" && (
               <ResponseMessage type="loading" message="Aguarde..." />
@@ -182,10 +168,10 @@ export default function Register() {
         </form>
         <Link
           className="group mt-[1em] hover:text-gray-600 md:mt-0  "
-          to={`/login`}
+          to={`/register`}
         >
-          Já possui uma conta?
-          <span className="underline underline-offset-4"> Entrar</span>
+          Não tem uma conta?
+          <span className="underline underline-offset-4"> Cadastre-se!</span>
         </Link>
       </div>
     </>

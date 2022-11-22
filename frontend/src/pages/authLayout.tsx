@@ -1,14 +1,9 @@
-import { ReactNode } from "react";
-import {
-  Link,
-  Navigate,
-  Outlet,
-  redirect,
-  useLocation,
-} from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
+
 import background from "../assets/login_background.png";
 import logo from "../assets/logo_ng_cash.gif";
-import MobileScreen from "../components/mobileScreen";
+
+import MobileScreen from "./mobileScreen";
 
 export default function AuthLayout() {
   let location = useLocation();

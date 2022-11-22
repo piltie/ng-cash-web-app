@@ -6,6 +6,9 @@ type MessageProps = {
   message: string;
 };
 
+/* MESSAGE FUNCTION
+-> It's used by other components. When the data is being fetch, this function is displayed, with a loading icon and message, and also used as a request success message if specified.
+*/
 export default function ResponseMessage({ type, message }: MessageProps) {
   useEffect(() => {
     const success = document.getElementById("successIcon");

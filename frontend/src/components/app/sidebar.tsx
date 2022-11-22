@@ -1,13 +1,26 @@
-import userpic from "../assets/user-pic.png";
-import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
+// React stuff
 import { useState } from "react";
-import logo from "../assets/logo_ng_cash.gif";
-import { ArrowLeftOnRectangleIcon } from "@heroicons/react/24/outline";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useAuth } from "../services/auth";
-import { BanknotesIcon, ClockIcon } from "@heroicons/react/24/outline";
-import ResponseMessage from "../util/responseMessage";
 
+// Assets
+import logo from "../../assets/logo_ng_cash.gif";
+import userpic from "../../assets/user-pic.png";
+
+// Icons
+import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
+import {
+  ArrowLeftOnRectangleIcon,
+  BanknotesIcon,
+  ClockIcon,
+} from "@heroicons/react/24/outline";
+
+// Request and auth stuff
+import { useAuth } from "../../services/auth";
+import ResponseMessage from "../responseMessage";
+
+/* HISTORY FUNCTION
+-> Returns the black sidebar which appear at the left side when the user successfully authenticates into the app.
+*/
 export default function SideBar({ user }: any) {
   const [balance, setBalance] = useState<null | string>(null);
   let auth = useAuth();
@@ -18,12 +31,11 @@ export default function SideBar({ user }: any) {
     try {
       auth.signout();
     } catch (e) {
-      //console.clear();
-
       return navigate("/error");
     }
   };
 
+  // Hides and shows the users actual balance.
   const balanceToggle = () => {
     const balanceSpan = document.getElementById("balance") as HTMLElement;
     const showBalance = document.getElementById("showPassword");

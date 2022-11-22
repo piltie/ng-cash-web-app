@@ -1,7 +1,9 @@
 import React from "react";
-import { Navigate, redirect, useLocation, useNavigate } from "react-router-dom";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
+
+import { formData } from "../components/auth/loginPage";
+
 import api from "../services/api";
-import { formData } from "../components/loginPage";
 
 export function useAuth() {
   return React.useContext(AuthContext);
@@ -37,29 +39,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
-/*export function AuthStatus() {
-  let auth = useAuth();
-  let navigate = useNavigate();
-  let location = useLocation();
-
-  if (!localStorage.getItem("x-access-token")) {
-    return <p>You are not logged in.</p>;
-  }
-
-  return (
-    <p>
-      Welcome you!{" "}
-      <button
-        onClick={() => {
-          auth.signout(() => navigate("/"));
-        }}
-      >
-        Sign out
-      </button>
-    </p>
-  );
-}
-*/
+// Checks if the user has logged in (if they don't have a token)
 export function RequireAuth({ children }: { children: JSX.Element }) {
   let location = useLocation();
 
@@ -70,6 +50,7 @@ export function RequireAuth({ children }: { children: JSX.Element }) {
   return children;
 }
 
+// Checks if the token is expired (used when the user is already logged in)
 export function CheckAuth({ children }: { children: JSX.Element }) {
   let location = useLocation();
 

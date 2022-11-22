@@ -1,14 +1,14 @@
 import { Route, Routes } from "react-router-dom";
-import LoginPage from "../components/loginPage";
-import Transactions from "../components/transactions";
+import LoginPage from "../components/auth/loginPage";
+import Transactions from "../components/app/transactions";
 import { AuthProvider, RequireAuth, CheckAuth } from "../services/auth";
 import AuthLayout from "../pages/authLayout";
 import AppLayout from "../pages/appLayout";
-import ErrorPage from "../components/error";
-import History from "../components/history";
-import ExpiredToken from "../components/expiredToken";
-import Register from "../components/register";
-import Success from "../components/successRegister";
+import ErrorPage from "../components/auth/error";
+import History from "../components/app/history";
+import ExpiredToken from "../components/auth/expiredToken";
+import Register from "../components/auth/register";
+import Success from "../components/auth/successRegister";
 
 export default function Router() {
   return (

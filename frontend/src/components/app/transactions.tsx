@@ -1,30 +1,32 @@
 // Request API
 import axios from "axios";
-import api from "../services/api";
+import api from "../../services/api";
 
 // React stuff
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { useUser } from "../pages/appLayout";
 
 // Images
-import corner from "../assets/corner-image.svg";
-import purpleStar from "../assets/purple-star.svg";
-import blackStar from "../assets/black-star.svg";
+import corner from "../../assets/corner-image.svg";
 
 // Icons
 import { UserIcon } from "@heroicons/react/24/solid";
 import { CurrencyDollarIcon } from "@heroicons/react/24/solid";
 
 // Components
-import ResponseMessage from "../util/responseMessage";
+import ResponseMessage from "../responseMessage";
+import { useUser } from "../../pages/appLayout";
 
+// Transaction form format
 type transactionData = {
   username: string;
   value: number;
 };
 
+/* TRANSACTIONS FUNCTION
+-> Allows the user to send money to another user, if the former has the specified quantity and the latter actually exists.
+*/
 export default function Transactions() {
   useEffect(() => {
     const interval = setInterval(() => {
@@ -63,7 +65,6 @@ export default function Transactions() {
     }
 
     try {
-      console.log(formData);
       let config = {
         headers: {
           "x-access-token": localStorage.getItem("x-access-token"),
@@ -78,7 +79,7 @@ export default function Transactions() {
       setUser({ username: user!.username, balance: data.balance });
     } catch (e) {
       setState(null);
-      //console.clear();
+
       if (axios.isAxiosError(e)) {
         if (e.response!.status === 400)
           return setError("username", { type: "custom" });
@@ -185,9 +186,6 @@ export default function Transactions() {
           )}
         </div>
       </form>
-      <img src={blackStar} className="absolute top-2 right-7 z-10 w-[1.5em]" />
-      <img src={purpleStar} className="absolute top-4 right-10 z-10 w-[3em]" />
-      <img src={blackStar} className="absolute top-12 right-6 z-10 w-[1.8em]" />
       <img src={corner} className="absolute bottom-0 right-0 z-10 w-[15em]" />
     </>
   );

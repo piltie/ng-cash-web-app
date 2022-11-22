@@ -1,15 +1,21 @@
+// Request stuff
 import axios from "axios";
+
+// React stuff
 import React, { useEffect } from "react";
 import {
   Outlet,
   useLocation,
   useOutletContext,
   useNavigate,
-  Navigate,
 } from "react-router-dom";
-import SideBar from "../components/sidebar";
+
+// Components
+import SideBar from "../components/app/sidebar";
 import api from "../services/api";
-import MobileScreen from "../components/mobileScreen";
+import MobileScreen from "./mobileScreen";
+
+// Assets
 import purpleStar from "../assets/purple-star.svg";
 import blackStar from "../assets/black-star.svg";
 
@@ -38,7 +44,7 @@ export default function AppLayout() {
 
       const response = await api.get("/user/info", config);
       const data = response.data;
-      console.log(data);
+
       if (!data.userDTO) {
         throw new Error();
       }

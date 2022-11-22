@@ -3,12 +3,13 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
-// Reuqest stuff
-import api from "../services/api";
+// Request stuff
+import api from "../../services/api";
 
 // Components
-import ResponseMessage from "../util/responseMessage";
+import ResponseMessage from "../responseMessage";
 
+// History response format
 interface IHistoryData {
   date: string;
   id: string;
@@ -17,12 +18,16 @@ interface IHistoryData {
   value: number;
 }
 
+// Filter form format
 type filterData = {
   dateFrom: string;
   dateTo: string;
   type: string[];
 };
 
+/* HISTORY FUNCTION
+-> Returns all of the user transaction history. The user go to /history, select the filter options and the function will fetch the desired data from the API.
+*/
 export default function History() {
   const {
     register,
