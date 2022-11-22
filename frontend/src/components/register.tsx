@@ -6,13 +6,14 @@ import { UserIcon } from "@heroicons/react/24/solid";
 import { EyeIcon } from "@heroicons/react/24/solid";
 import { EyeSlashIcon } from "@heroicons/react/24/solid";
 import axios from "axios";
+import api from "../services/api";
 
 export type formData = {
   username: string;
   password: string;
 };
 
-export default function LoginPage() {
+export default function Register() {
   const {
     register,
     setError,
@@ -27,17 +28,23 @@ export default function LoginPage() {
   let from = location.state?.from?.pathname || "/";
 
   const onSubmit = async (formData: formData) => {
-    try {
-      await auth.signin(formData);
+    if (!/\d/.test(formData.password) || !/[A-Z]/.test(formData.password)) {
+      return setError("password", { type: "custom" });
+    }
 
-      navigate(from, { replace: true });
+    try {
+      const response = await api.post("/user/create", formData);
+      const data = response.data;
+
+      navigate("/success");
     } catch (e) {
-      console.clear();
+      //console.clear();
       if (axios.isAxiosError(e)) {
         if (e.response!.status === 400)
-          return setError("username", { type: "custom" });
-        if (e.response!.status === 401)
-          return setError("password", { type: "custom" });
+          return setError("username", {
+            type: "custom",
+            message: "* Já existe um usuário com esse nome.",
+          });
       }
 
       return navigate("/error");
@@ -65,14 +72,23 @@ export default function LoginPage() {
   return (
     <>
       <div className="flex w-[100%] flex-col md:justify-between">
-        <h1 className="text-[24px] font-bold">Fazer Login</h1>
-
+        <div>
+          <h1 className="text-[24px] font-bold">Junte-se a nós!</h1>
+          <h2>Confira os requisitos abaixo para criar uma conta NG.CASH:</h2>
+          <ul className="mt-[1em]">
+            <li>- Usuário: Mínimo de 3 caracteres.</li>
+            <li>
+              - Senha: Mínimo de 8 caracteres; Ao menos uma letra maíscula e um
+              número.
+            </li>
+          </ul>
+        </div>
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="mt-[1em] flex h-[15em] flex-col justify-between md:mt-0"
         >
           <label className="font-bold">
-            Usuário{" "}
+            Crie um usuário{" "}
             <span
               role="alert"
               className={` text-pink-600  ${
@@ -85,8 +101,8 @@ export default function LoginPage() {
           <div className="flex flex-row-reverse rounded-full border-[1px] border-solid border-black  outline-2 outline-gray-300 focus-within:outline">
             <input
               className="peer w-[100%] rounded-r-full p-1 outline-none"
-              placeholder="Digite seu usuário"
-              {...register("username", { required: true })}
+              placeholder="Digite o usuário"
+              {...register("username", { required: true, min: 3 })}
               aria-invalid={errors.username ? "true" : "false"}
             />
             <UserIcon className="mx-[0.6em] h-4 w-4 self-center peer-placeholder-shown:text-gray-400 " />
@@ -98,10 +114,12 @@ export default function LoginPage() {
               errors.username ? "visible" : "invisible"
             }`}
           >
-            * Usuário inválido.
+            {errors.username?.message
+              ? errors.username.message
+              : "* Usuário inválido."}
           </span>
           <label className="font-bold">
-            Senha{" "}
+            Crie uma senha{" "}
             <span
               role="alert"
               className={` text-pink-600  ${
@@ -116,8 +134,8 @@ export default function LoginPage() {
               type="password"
               id="password"
               className="peer w-[100%] rounded-r-full p-1 outline-none"
-              placeholder="Digite sua senha"
-              {...register("password", { required: true })}
+              placeholder="Digite a senha"
+              {...register("password", { required: true, min: 8 })}
               aria-invalid={errors.password ? "true" : "false"}
             />
 
@@ -143,15 +161,15 @@ export default function LoginPage() {
             type="submit"
             className="w-[7em] rounded bg-black p-[0.3em] text-white hover:bg-[#7431f4] "
           >
-            Entrar
+            Cadastrar
           </button>
         </form>
         <Link
           className="group mt-[1em] hover:text-gray-600 md:mt-0  "
-          to={`/register`}
+          to={`/login`}
         >
-          Não tem uma conta?
-          <span className="underline underline-offset-4"> Cadastre-se!</span>
+          Já possui uma conta?
+          <span className="underline underline-offset-4"> Entrar</span>
         </Link>
       </div>
     </>

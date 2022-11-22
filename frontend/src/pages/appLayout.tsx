@@ -15,7 +15,10 @@ type IUserData = {
   balance: string;
 };
 
-type ContextType = { user: IUserData | null };
+type ContextType = {
+  user: IUserData | null;
+  setUser: React.Dispatch<React.SetStateAction<IUserData | null>>;
+};
 
 export default function AppLayout() {
   const [user, setUser] = React.useState<IUserData | null>(null);
@@ -55,9 +58,9 @@ export default function AppLayout() {
 
   return (
     <div className="flex">
-      <SideBar user={user} />
-      <div className="ml-[2em]">
-        <Outlet context={{ user }} />
+      <SideBar className="z-10" user={user} />
+      <div className="z-10 ml-[2em]">
+        <Outlet context={{ user, setUser }} />
       </div>
     </div>
   );

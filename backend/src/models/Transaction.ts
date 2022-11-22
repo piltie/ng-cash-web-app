@@ -7,7 +7,7 @@ class Transaction extends Model {
   declare debitedAccountId: string;
   declare creditedAccountId: string;
   declare value: number;
-  declare createdAt: string
+  declare createdAt: string;
 }
 
 Transaction.init(
@@ -36,11 +36,15 @@ Transaction.init(
       type: DataTypes.FLOAT,
       allowNull: false,
     },
+    createdAt: {
+      type: DataTypes.DATEONLY,
+      allowNull: false,
+    },
   },
   {
     tableName: "transactions",
     sequelize,
-    timestamps: true,
+    timestamps: false,
     updatedAt: false,
   }
 );

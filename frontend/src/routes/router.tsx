@@ -5,7 +5,10 @@ import { AuthProvider, RequireAuth, CheckAuth } from "../services/auth";
 import AuthLayout from "../pages/authLayout";
 import AppLayout from "../pages/appLayout";
 import ErrorPage from "../components/error";
+import History from "../components/history";
 import ExpiredToken from "../components/expiredToken";
+import Register from "../components/register";
+import Success from "../components/success";
 
 export default function Router() {
   return (
@@ -28,6 +31,23 @@ export default function Router() {
               </CheckAuth>
             }
           />
+
+          <Route
+            path="/register"
+            element={
+              <CheckAuth>
+                <Register />
+              </CheckAuth>
+            }
+          />
+          <Route
+            path="/success"
+            element={
+              <CheckAuth>
+                <Success />
+              </CheckAuth>
+            }
+          />
           <Route path="/error" element={<ErrorPage />}></Route>
           <Route path="/expiredToken" element={<ExpiredToken />}></Route>
         </Route>
@@ -40,6 +60,7 @@ export default function Router() {
           }
         >
           <Route path="/transactions" element={<Transactions />} />
+          <Route path="/history" element={<History />} />
         </Route>
       </Routes>
     </AuthProvider>

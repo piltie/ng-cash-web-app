@@ -9,7 +9,7 @@ import api from "../services/api";
 
 type transactionData = {
   username: string;
-  balance: number;
+  value: number;
 };
 
 export default function Transactions() {
@@ -34,30 +34,39 @@ export default function Transactions() {
   } = useForm<transactionData>();
   let navigate = useNavigate();
   const { user } = useUser();
+  const { setUser } = useUser();
 
   const onSubmit = async (formData: transactionData) => {
-    if (parseFloat(user!.balance) < formData.balance) {
-      return setError("balance", {
+    if (parseFloat(user!.balance) < formData.value) {
+      return setError("value", {
         type: "custom",
         message: "* Você não possui saldo suficiente.",
       });
     }
     try {
+      console.log(formData);
       let config = {
         headers: {
           "x-access-token": localStorage.getItem("x-access-token"),
         },
       };
 
-      const response = await api.post("transaction/create", config);
+      const response = await api.post("transaction/create", formData, config);
       const data = response.data;
+
+      setUser({ username: user!.username, balance: data.balance });
     } catch (e) {
       console.clear();
       if (axios.isAxiosError(e)) {
         if (e.response!.status === 400)
           return setError("username", { type: "custom" });
-        if (e.response!.status === 401)
-          return setError("balance", {
+        if (e.response!.status === 404)
+          return setError("username", {
+            type: "custom",
+            message: "* Usuário não existe.",
+          });
+        if (e.response!.status === 403)
+          return setError("value", {
             type: "custom",
             message: "* Você não possui saldo suficiente.",
           });
@@ -113,7 +122,7 @@ export default function Transactions() {
           <span
             role="alert"
             className={` text-pink-600  ${
-              errors.balance ? "visible" : "invisible"
+              errors.value ? "visible" : "invisible"
             }`}
           >
             *
@@ -121,10 +130,11 @@ export default function Transactions() {
         </label>
         <div className="flex flex-row-reverse border-b-[1px] border-solid border-black  ">
           <input
+            type="number"
             className="peer w-[100%] p-1 outline-none "
             placeholder="Digite o valor"
-            {...register("balance", { required: true })}
-            aria-invalid={errors.balance ? "true" : "false"}
+            {...register("value", { required: true })}
+            aria-invalid={errors.value ? "true" : "false"}
           />
 
           <CurrencyDollarIcon className="mx-[0.6em] h-4 w-4 self-center peer-placeholder-shown:text-gray-400 " />
@@ -133,12 +143,10 @@ export default function Transactions() {
         <span
           role="alert"
           className={`mt-[-5px] text-[0.8em] text-pink-600 ${
-            errors.balance ? "visible" : "invisible"
+            errors.value ? "visible" : "invisible"
           }`}
         >
-          {errors.balance?.message
-            ? errors.balance.message
-            : "* Valor inválido."}
+          {errors.value?.message ? errors.value.message : "* Valor inválido."}
         </span>
 
         <button

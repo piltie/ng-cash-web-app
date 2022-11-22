@@ -1,53 +1,63 @@
 import Transaction from "../models/Transaction";
 
 interface ITransactionCreate {
-    debitedAccountId: string,
-    creditedAccountId: string,
-    value: number
+  debitedAccountId: string;
+  creditedAccountId: string;
+  value: number;
 }
 
 export default class TransactionServices {
-    async create({ debitedAccountId, creditedAccountId, value }: ITransactionCreate) {
-        const account = await Transaction.create({
-            debitedAccountId,
-            creditedAccountId,
-            value
-        });
+  async create({
+    debitedAccountId,
+    creditedAccountId,
+    value,
+  }: ITransactionCreate) {
+    const date = new Date().toISOString();
 
-        if (!account) throw Error("Couldn't create transaction.");
+    const transaction = await Transaction.create({
+      debitedAccountId,
+      creditedAccountId,
+      value,
+      createdAt: date,
+    });
 
-        return account;
-    };
+    console.log("aaaaaaaaaaaaaaaaa", transaction);
 
-    async delete(id: string) {
-        await Transaction.destroy({
-            where: {
-              id
-            }
-          });
-    }
-    
-    async findAllCashIn(id: string) {
-        const transactions = await Transaction.findAll({
-            where: {
-                creditedAccountId: id
-            }
-          });
+    if (!transaction) throw Error("Couldn't create transaction.");
 
-          if (!transactions) throw Error("Couldn't search for cash-in transactions.");
-          
-          return transactions;
-    }
+    return transaction;
+  }
 
-    async findAllCashOut(id: string) {
-        const transactions = await Transaction.findAll({
-            where: {
-                debitedAccountId: id
-            }
-          });
+  async delete(id: string) {
+    await Transaction.destroy({
+      where: {
+        id,
+      },
+    });
+  }
 
-          if (!transactions) throw Error("Couldn't search for cash-out transactions.");
+  async findAllCashIn(id: string) {
+    const transactions = await Transaction.findAll({
+      where: {
+        creditedAccountId: id,
+      },
+    });
 
-          return transactions;
-    }
+    if (!transactions) throw Error("Couldn't search for cash-in transactions.");
+
+    return transactions;
+  }
+
+  async findAllCashOut(id: string) {
+    const transactions = await Transaction.findAll({
+      where: {
+        debitedAccountId: id,
+      },
+    });
+
+    if (!transactions)
+      throw Error("Couldn't search for cash-out transactions.");
+
+    return transactions;
+  }
 }

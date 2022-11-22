@@ -63,9 +63,9 @@ export default function SideBar({ user }: any) {
           </div>
         </div>
       </div>
-      <div className="mb-[10em] text-[1.5em] ">
+      <div className="mb-[10em] text-[1.3em] ">
         <div
-          className={`flex border-y-[2px] border-solid border-white hover:text-[#7431f4] ${
+          className={`border-y-[0.25px] border-solid border-white hover:text-[#7431f4] ${
             location.pathname === "/transactions"
               ? "text-[#7431f4]"
               : "text-white"
@@ -77,11 +77,11 @@ export default function SideBar({ user }: any) {
           </Link>
         </div>
         <div
-          className={`border-y-[2px] border-t-0 border-solid border-white hover:text-[#7431f4] ${
+          className={`border-y-[0.25px] border-t-0 border-solid border-white hover:text-[#7431f4] ${
             location.pathname === "/history" ? "text-[#7431f4]" : "text-white"
           }`}
         >
-          <Link to="/transactions" className="flex items-center pl-[2em]">
+          <Link to="/history" className="flex items-center pl-[2em]">
             <ClockIcon className=" w-[1em] " />
             <h2 className=" py-[1em] pl-[1em]">Histórico</h2>
           </Link>
