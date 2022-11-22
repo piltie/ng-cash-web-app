@@ -50,6 +50,8 @@ export default function History() {
       }
       return lineElement!.classList.remove("invisible");
     }, 500);
+
+    return () => clearInterval(interval);
   });
 
   const onSubmit = async (formData: filterData) => {
@@ -60,7 +62,15 @@ export default function History() {
     const dateTo = new Date(formData.dateTo);
 
     if (dateFrom > dateTo) {
+      setState(null);
       return setError("dateFrom", {
+        type: "custom",
+      });
+    }
+
+    if (!formData.type || formData.type.length < 1) {
+      setState(null);
+      return setError("type", {
         type: "custom",
       });
     }
@@ -80,12 +90,18 @@ export default function History() {
 
       const response = await api.get(path, config);
       const data = response.data;
+
       if (!data.transactionsDTO) {
         throw new Error();
       }
 
+      const sortedData = data.transactionsDTO.filter((data: any) => {
+        if (new Date(data.date) <= dateTo && new Date(data.date) >= dateFrom)
+          return data;
+      });
+
       setState(null);
-      setHistory(data.transactionsDTO);
+      setHistory(sortedData);
     } catch (e) {
       setState(null);
 
@@ -104,84 +120,98 @@ export default function History() {
       </h1>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex h-[13em] w-[30em]  flex-col justify-between  "
+        className="flex h-[13em] w-[37em] flex-col  justify-between pt-[2em] text-[1.2em] max-[1200px]:w-[100%] md:mt-0"
       >
-        <label className="flex flex-row  flex-wrap items-center font-bold">
-          <div>
-            Período:{" "}
+        <div>
+          <div className="flex flex-row  flex-wrap items-center font-bold">
+            <label>
+              Período:{" "}
+              <span
+                role="alert"
+                className={` text-pink-600  ${
+                  errors.dateFrom || errors.dateTo ? "visible" : "invisible"
+                }`}
+              >
+                *
+              </span>
+            </label>
+
+            <div className="ml-[1em] flex">
+              <div className="  border-b-[1px] border-solid border-black   ">
+                <input
+                  className="peer w-[100%]   p-1 outline-none"
+                  placeholder="Data de início"
+                  type="date"
+                  {...register("dateFrom", { required: true })}
+                  aria-invalid={errors.dateFrom ? "true" : "false"}
+                />
+              </div>
+              <span className="px-[1em]">à</span>
+              <div className="  border-b-[1px] border-solid border-black   ">
+                <input
+                  className="peer w-[100%]  p-1 outline-none"
+                  placeholder="Data de fim"
+                  type="date"
+                  {...register("dateTo", { required: true })}
+                  aria-invalid={errors.dateTo ? "true" : "false"}
+                />
+              </div>
+            </div>
+          </div>
+          <div className="ml-[5.7em] mt-[5px]  flex w-[17.5em] justify-between">
             <span
               role="alert"
-              className={` text-pink-600  ${
-                errors.dateFrom || errors.dateTo ? "visible" : "invisible"
+              className={` text-[0.8em] text-pink-600    ${
+                errors.dateFrom ? "visible" : "invisible"
               }`}
             >
-              *
+              * Data inválida.
+            </span>
+
+            <span
+              role="alert"
+              className={`  text-[0.8em] text-pink-600    ${
+                errors.dateTo ? "visible" : "invisible"
+              }`}
+            >
+              * Data inválida.
             </span>
           </div>
-          <div className="  border-b-[1px] border-solid border-black   ">
-            <input
-              className="peer w-[100%]   p-1 outline-none"
-              placeholder="Data de início"
-              type="date"
-              {...register("dateFrom", { required: true })}
-              aria-invalid={errors.dateFrom ? "true" : "false"}
-            />
-          </div>
-          <span className="px-[1em]">à</span>
-          <div className="  border-b-[1px] border-solid border-black   ">
-            <input
-              className="peer w-[100%]  p-1 outline-none"
-              placeholder="Data de fim"
-              type="date"
-              {...register("dateTo", { required: true })}
-              aria-invalid={errors.dateTo ? "true" : "false"}
-            />
-          </div>
-          <span
-            role="alert"
-            className={`mt-[-5px] text-[0.8em] text-pink-600    ${
-              errors.dateFrom || errors.dateTo ? "visible" : "invisible"
-            }`}
-          >
-            * Data inválida.
-          </span>
-        </label>
-
-        <div className="flex  ">
-          <label
-            className="flex
+        </div>
+        <div className="mt-[2em]">
+          <div className="mt-[-3em] flex ">
+            <label
+              className="flex
             w-[10em] items-center text-center font-bold"
-          >
-            Tipo de transação:
-          </label>
-          <div className="ml-[1em] flex w-[6em] items-center justify-evenly">
-            <input
-              {...register("type")}
-              type="checkbox"
-              value="cashout"
-              defaultChecked
-            />
-            <label>Cashout</label>
-          </div>
-          <div className="ml-[1em] flex w-[6em] items-center justify-evenly ">
-            <input
-              {...register("type")}
-              type="checkbox"
-              value="cashin"
-              defaultChecked
-            />
-            <label>Cashin</label>
+            >
+              Tipo de transação:{"  "}
+              <span
+                role="alert"
+                className={`ml-[0.3em] text-pink-600  ${
+                  errors.type ? "visible" : "invisible"
+                }`}
+              >
+                *
+              </span>
+            </label>
+            <div className="ml-[1em] flex w-[6em] items-center justify-evenly">
+              <input {...register("type")} type="checkbox" value="cashout" />
+              <label>Cashout</label>
+            </div>
+            <div className="ml-[1em] flex w-[6em] items-center justify-evenly ">
+              <input {...register("type")} type="checkbox" value="cashin" />
+              <label>Cashin</label>
+            </div>
           </div>
           <span
             role="alert"
-            className={`mt-[-5px] text-[0.8em] text-pink-600    ${
+            className={`mt-[-4em] text-[0.8em] text-pink-600    ${
               errors.type ? "visible" : "invisible"
             }`}
           >
             * Escolha ao menos um tipo.
           </span>
         </div>
-
         <div className="flex">
           <button
             type="submit"
@@ -194,9 +224,10 @@ export default function History() {
           )}
         </div>
       </form>
-      <div className="flex flex-wrap">
+      <div className="mt-[2em] flex flex-wrap">
         {" "}
         {history &&
+          history.length > 0 &&
           history.map((transaction: IHistoryData) => (
             <div className="flex flex-col p-[2em]" key={transaction.id}>
               <p>{transaction.type}</p>
@@ -204,7 +235,12 @@ export default function History() {
               <p>{transaction.value}</p>
               <p>{transaction.date}</p>
             </div>
-          ))}
+          ))}{" "}
+        {history && history.length < 1 && (
+          <div className="flex flex-col p-[2em]">
+            <h1>Nenhuma transação nesse período encontrada.</h1>
+          </div>
+        )}
       </div>
     </>
   );

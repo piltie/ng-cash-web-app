@@ -134,7 +134,7 @@ export default function Transactions() {
 
         <span
           role="alert"
-          className={`mt-[-5px] text-[0.8em] text-pink-600    ${
+          className={`mt-[-10px] text-[0.8em] text-pink-600    ${
             errors.username ? "visible" : "invisible"
           }`}
         >
@@ -165,7 +165,7 @@ export default function Transactions() {
 
         <span
           role="alert"
-          className={`mt-[-5px] text-[0.8em] text-pink-600 ${
+          className={`mt-[-10px] text-[0.8em] text-pink-600 ${
             errors.value ? "visible" : "invisible"
           }`}
         >
