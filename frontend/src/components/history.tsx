@@ -232,11 +232,11 @@ export default function History() {
             >
               Tipo de transação:
             </label>
-            <div className="ml-[1em] flex w-[6em] items-center justify-between">
+            <div className="ml-[1em] flex w-[6em] items-center justify-evenly">
               <input {...register("type")} type="checkbox" value="cashout" />
               <label>Cashout</label>
             </div>
-            <div className="ml-[1em] flex w-[6em] items-center justify-between ">
+            <div className="ml-[1em] flex w-[6em] items-center justify-evenly ">
               <input {...register("type")} type="checkbox" value="cashin" />
               <label>Cashin</label>
             </div>
