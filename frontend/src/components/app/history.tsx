@@ -9,6 +9,12 @@ import api from "../../services/api";
 // Components
 import ResponseMessage from "../responseMessage";
 
+import blackStar from "../../assets/black-star.svg";
+
+import { UserIcon } from "@heroicons/react/24/solid";
+import { CurrencyDollarIcon } from "@heroicons/react/24/solid";
+import { CalendarDaysIcon } from "@heroicons/react/24/solid";
+
 // History response format
 interface IHistoryData {
   date: string;
@@ -224,21 +230,55 @@ export default function History() {
           )}
         </div>
       </form>
-      <div className="mt-[2em] flex flex-wrap">
-        {" "}
-        {history &&
-          history.length > 0 &&
-          history.map((transaction: IHistoryData) => (
-            <div className="flex flex-col p-[2em]" key={transaction.id}>
-              <p>{transaction.type}</p>
-              <p>{transaction.username}</p>
-              <p>{transaction.value}</p>
-              <p>{transaction.date}</p>
-            </div>
-          ))}{" "}
+      <div className="mt-[2em] flex flex-col flex-wrap">
         {history && history.length < 1 && (
-          <div className="flex flex-col p-[2em]">
-            <h1>Nenhuma transação nesse período encontrada.</h1>
+          <div className="flex ">
+            <img src={blackStar} className=" w-[1.5em]" />
+            <h1 className="ml-[0.5em] text-[1.3em]">
+              Nenhuma transação nesse período encontrada.
+            </h1>
+          </div>
+        )}{" "}
+        {history && history.length > 0 && (
+          <div className="flex ">
+            <img src={blackStar} className=" w-[1.5em]" />
+            <h1 className="ml-[0.5em] text-[1.3em]">
+              {history.length}
+              {history.length > 1
+                ? " transações encontradas"
+                : " transação encontrada"}{" "}
+              nesse período.
+            </h1>
+          </div>
+        )}{" "}
+        {history && history.length > 0 && (
+          <div className="mt-[2em] flex flex-wrap justify-evenly">
+            {history.map((transaction: IHistoryData) => (
+              <div className="mb-[2em] rounded-2xl border-r-[7px] border-b-[7px] border-solid  border-black bg-black">
+                <div
+                  className="flex h-[11em] flex-col justify-around rounded-2xl border-[1px] border-solid border-black bg-white p-[2em]"
+                  key={transaction.id}
+                >
+                  <div className="font-semibold tracking-widest">
+                    {transaction.type === "cashIn" ? "ENTRADA" : "SAÍDA"}
+                  </div>
+                  <div className="flex flex-col">
+                    <div className="flex">
+                      <UserIcon className="w-[1em]" />
+                      <span className="ml-[0.3em]">{transaction.username}</span>
+                    </div>
+                    <div className="flex">
+                      <CurrencyDollarIcon className="w-[1em]" />
+                      <span className="ml-[0.3em]">{transaction.value}</span>
+                    </div>
+                    <div className="flex">
+                      <CalendarDaysIcon className="w-[1em]" />
+                      <span className="ml-[0.3em]">{transaction.date}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}{" "}
           </div>
         )}
       </div>

@@ -71,7 +71,7 @@ export default function AppLayout() {
       <div className="flex  max-[1070px]:text-[0.8em] ">
         <SideBar className="z-10" user={user} />
         <div
-          className="z-10 ml-[4em] mr-[4em] max-[1200px]:w-[100%]
+          className="z-10 ml-[4em] mr-[4em] w-[100%]
         "
         >
           <Outlet context={{ user, setUser }} />
