@@ -10,6 +10,11 @@ services:
       POSTGRES_DB: ngcashweb
     volumes:
       - ./postgresql/data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
   service:
     build:
       context: ./backend
@@ -19,7 +24,8 @@ services:
       - ./backend/config:/app/config
       - ./backend/src:/app/src
     depends_on:
-      - database
+      database:
+        condition: service_healthy
     ports:
       - "3000:3000"
   frontend:
