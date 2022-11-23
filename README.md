@@ -4,7 +4,7 @@
 É necessário ter o docker desktop instalado (https://docs.docker.com/desktop/).
 
 <h2>1. Instalar dependências</h2>
-Abra a pasta na qual você descompatou esse projeto (no diretório onde está o arquivo do docker-compose.yml). Crie uma pasta vazia com nome "postgresql" (é nesta pasta que o banco de dados será armazenado locamente).
+Dê um git clone nesse projeto e o abra num terminal (esteja no diretório onde está o arquivo do docker-compose.yml). Crie uma pasta vazia com nome "postgresql" (é nesta pasta que o banco de dados será armazenado locamente).
 
 Ainda na pasta descompactada, abra o terminal, e digite o comando:
 
