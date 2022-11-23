@@ -1,10 +1,15 @@
 {
-  "dependencies": {
-    "concurrently": "^7.0.0",
-    "react-hook-form": "^7.39.4"
-  },
+  "name": "ng-cash-web-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "install": "concurrently \"cd ./backend && npm install\" \"cd ./frontend && npm install\"",
-    "start": "concurrently \"cd ./backend && npm run dev\" \"cd ./frontend && npm run dev\""
-  }
+    "docker:build": "docker-compose -p docker build",
+    "docker:down": "docker-compose -p docker down",
+    "docker:up": "docker-compose -p docker up",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }

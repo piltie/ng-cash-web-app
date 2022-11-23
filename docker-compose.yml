@@ -1,0 +1,33 @@
+version: "3"
+services:
+  database:
+    image: postgres:12.1
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-1234}
+      POSTGRES_DB: ngcashweb
+    volumes:
+      - ./postgresql/data:/var/lib/postgresql/data
+  service:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    volumes:
+      - /app/node_modules
+      - ./backend/config:/app/config
+      - ./backend/src:/app/src
+    depends_on:
+      - database
+    ports:
+      - "3000:3000"
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    volumes:
+      - /app/node_modules
+      - ./frontend:/app
+    ports:
+      - "8080:8080"
